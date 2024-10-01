@@ -1,3 +1,4 @@
+#lang racket
 ; TDA Player aquí
 
 ; Dom: id (int) X name (string) X color (string) X wins (int) X losses
@@ -64,3 +65,4 @@
 	(list-set! pl 7 rem_pieces)
 )
 
+(all-defined-out)
