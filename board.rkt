@@ -25,7 +25,7 @@
 (define (do-filas n lst)
 	(map (lambda (a) (do-cols n)) lst)
 )
-; Â[x][y]
+; A[x][y]
 (define (board)
 ; USAR LISTAS ENLAZADAS, NO MATRICES!!!
 ;	(do-filas 6 (do-cols 7))
@@ -35,22 +35,26 @@
 (define empty-board (board))
 
 ; Selectores
-(define (board-col br x)
+(define (get-board-col br x)
 	(list-ref br x)
+)
+
+(define (get-board-fila br y)
+	(foldr (lambda (l1 l2)(cons (list-ref l1 y) l2)) '() br)
 )
 
 ;FIXME: Usar numeración desde 0!!!
 (define (board-xy br x y)
-	(if	(< (length (board-col br x)) y)
+	(if	(< (length (get-board-col br x)) y)
 		null
-		(list-ref (board-col br x) y)
+		(list-ref (get-board-col br x) y)
 	)
 )
 
 ; Modificadores
 ; Modifica una columna
 (define (col-set br x y pieza)
-	(list-set (board-col br x) y pieza)
+	(list-set (get-board-col br x) y pieza)
 )
 
 ; Modifica y ASIGNA una fila para modificar UNA PIEZA
@@ -59,7 +63,7 @@
 )
 
 (define (col-append br x pieza)
-	(append (board-col br x) pieza)
+	(append (get-board-col br x) pieza)
 )
 
 ; Modifica y ASIGNA una fila para agregar UNA PIEZA
@@ -85,9 +89,33 @@
 ; Nota: Si col está llena, mostrar error y no realizar
 ; jugada.
 (define (board-set-play-piece br col pieza)
-	(if (col-llena? (board-col br col))
+	(if (col-llena? (get-board-col br col))
 		(car (cons br (display "Error: col llena\n")))
 		(board-append br col pieza)
+	)
+)
+
+; Ve si 4 valores sucesivos son iguales. 
+; Función auxiliar para checkeos
+(define (col-check-win col count pieza)
+	(if (and (null? col) (< count 4))
+		#f
+		(if (= count 4) 
+			#t
+			(if (eqv? (car col) pieza)
+				(col-check-win (cdr col) (+ 1 count) (car col))
+				(col-check-win (cdr col) 1 (car col))
+			)
+		)
+	)
+)
+
+; Nota: Recursividad Natural
+(define (board-check-vertical-win br)
+	(if (null? br)
+		#f
+		(or (col-check-win (car br) 1 null)
+			(board-check-vertical-win (cdr br))
 	)
 )
 ; ################## TDA Board

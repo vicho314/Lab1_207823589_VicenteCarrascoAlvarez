@@ -1,1 +1,2 @@
 ; Funciones auxiliares aquí
+
