@@ -1,5 +1,6 @@
 #lang racket
 ; (require "player.rkt")
+(require "utils.rkt")
 ; TDA Board + TDA Piece
 
 ; TDA Piece
@@ -28,8 +29,8 @@
 ; A[x][y]
 (define (board)
 ; USAR LISTAS ENLAZADAS, NO MATRICES!!!
-;	(do-filas 6 (do-cols 7))
-	(do-cols 7)
+	(do-filas 6 (do-cols 7))
+;	(do-cols 7)
 )
 
 (define empty-board (board))
@@ -63,7 +64,7 @@
 )
 
 (define (col-append br x pieza)
-	(append (get-board-col br x) pieza)
+	(append-null (get-board-col br x) pieza)
 )
 
 ; Modifica y ASIGNA una fila para agregar UNA PIEZA
@@ -78,10 +79,12 @@
 )
 
 (define (col-llena? col)
-	(= 6 (length col))
+	(= 6	(length (filter (lambda (a) (not (null? a))) col) 
+		)
+	)
 )
 
-(define (board-can-play br)
+(define (board-can-play? br)
 	(null? (filter col-llena? br))
 )
 
@@ -98,7 +101,7 @@
 ; Ve si 4 valores sucesivos son iguales. 
 ; Función auxiliar para checkeos
 (define (col-check-win col count pieza)
-	(if (and (null? col) (< count 4))
+	(if (or (and (null? col) (< count 4)) (eqv? pieza null))
 		#f
 		(if (= count 4) 
 			#t
@@ -114,8 +117,29 @@
 (define (board-check-vertical-win br)
 	(if (null? br)
 		#f
-		(or (col-check-win (car br) 1 null)
+		(or (col-check-win (car br) 0 1)
 			(board-check-vertical-win (cdr br))
+		)
+	)
+)
+
+(define (fila-check-win br y)
+	(col-check-win (get-board-fila br y) 0 1)
+)
+
+(define (fila-check-recurse br y)
+	(if (>= y 6)
+		#f
+		(or (fila-check-win br y)
+			(fila-check-win br (+ y 1))
+		)
+	)
+)
+; Nota: transformar fila a col, evaluar col.
+(define (board-check-horizontal-win br)
+	(if (null? br)
+		#f
+		(fila-check-recurse br 0)
 	)
 )
 ; ################## TDA Board
