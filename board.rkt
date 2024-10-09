@@ -44,11 +44,34 @@
 	(foldr (lambda (l1 l2)(cons (list-ref l1 y) l2)) '() br)
 )
 
+(define (fuera-del-tablero x y)
+	(or (< x 0) (> x 6) (< y 0) (> y 5)
+	)
+)
+
 ;FIXME: Usar numeración desde 0!!!
-(define (board-xy br x y)
+(define (get-board-xy br x y)
 	(if	(< (length (get-board-col br x)) y)
 		null
 		(list-ref (get-board-col br x) y)
+	)
+)
+
+(define (get-board-diag-ascen br x y)
+	(if (fuera-del-tablero x y)
+		null
+		(cons (get-board-xy x y) 
+			(get-board-diag-ascen (+ x 1) (+ y 1))
+		)
+	)
+)
+
+(define (get-board-diag-descen br x y)
+	(if (fuera-del-tablero x y)
+		null
+		(cons (get-board-xy x y) 
+			(get-board-diag-ascen (+ x 1) (- y 1))
+		)
 	)
 )
 
@@ -140,6 +163,68 @@
 	(if (null? br)
 		#f
 		(fila-check-recurse br 0)
+	)
+)
+
+; Solo se necesitan las diag. de (0,5),(1,5),(2,5),(3,5) 
+; y (0,4),(0,3)
+(define criterio-descen (list 
+	(cons 0 5)
+	(cons 1 5)
+	(cons 2 5)
+	(cons 3 5)
+	(cons 0 4)
+	(cons 0 3)
+	)
+)
+
+(define (diag-check-descen-win br x y)
+	(col-check-win (get-board-diag-descen br x y) 0 1)
+)
+
+(define (recurse-descen-win br puntos)
+	(if (null? puntos)
+		#f
+		(or (diag-check-descen-win br (caar puntos) (cadr puntos))
+			(recurse-descen-win br (cdr puntos)) 
+	)
+)
+
+(define (board-check-descen-win br)
+	(recurse-descen-win br criterio-descen)
+)
+
+; Solo se necesitan las diag. de (0,0),(1,0),(2,0),(3,0) 
+; y (0,1),(0,2)
+(define criterio-ascen (list
+	(cons 0 0)
+	(cons 1 0)
+	(cons 2 0)
+	(cons 3 0)
+	(cons 0 1)
+	(cons 0 2)
+	)
+)
+
+(define (diag-check-ascen-win br x y)
+	(col-check-win (get-board-diag-ascen br x y) 0 1)
+)
+
+(define (recurse-ascen-win br puntos)
+	(if (null? puntos)
+		#f
+		(or (diag-check-ascen-win br (caar puntos) (cadr puntos))
+			(recurse-ascen-win br (cdr puntos)) 
+	)
+)
+
+(define (board-check-descen-win br)
+	(recurse-descen-win br criterio-ascen)
+)
+
+(define (board-check-diag-win br)
+	(or (board-check-descen-win br) 
+		(board-check-ascen-win br)
 	)
 )
 ; ################## TDA Board
