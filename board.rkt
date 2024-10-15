@@ -14,6 +14,26 @@
 	(car p)
 )
 
+;(define piece-p1 (piece "red"))
+;(define piece-p2 (piece "yellow"))
+
+(define (hash-piece pieza)
+	(if (eqv? (piece-color pieza) "red")
+		1
+		(if (eqv? (piece-color pieza) "yellow")
+			2
+			0
+		)
+	)
+)
+
+; 'or' de las piezas ya hasheadas
+(define (hash-or num1 num2)
+	(if (eqv? num1 0)
+		num2
+		num1
+	)
+)
 ; ################### TDA Piece
 
 ; TDA Board
@@ -125,9 +145,9 @@
 ; Función auxiliar para checkeos
 (define (col-check-win col count pieza)
 	(if (or (and (null? col) (< count 4)) (eqv? pieza null))
-		#f
+		0	;#f
 		(if (= count 4) 
-			#t
+			(hash-piece pieza)	;#t
 			(if (eqv? (car col) pieza)
 				(col-check-win (cdr col) (+ 1 count) (car col))
 				(col-check-win (cdr col) 1 (car col))
@@ -139,8 +159,8 @@
 ; Nota: Recursividad Natural
 (define (board-check-vertical-win br)
 	(if (null? br)
-		#f
-		(or (col-check-win (car br) 0 1)
+		0	;#f
+		(hash-or (col-check-win (car br) 0 1)
 			(board-check-vertical-win (cdr br))
 		)
 	)
@@ -152,8 +172,8 @@
 
 (define (fila-check-recurse br y)
 	(if (>= y 6)
-		#f
-		(or (fila-check-win br y)
+		0	;#f
+		(hash-or (fila-check-win br y)
 			(fila-check-win br (+ y 1))
 		)
 	)
@@ -161,7 +181,7 @@
 ; Nota: transformar fila a col, evaluar col.
 (define (board-check-horizontal-win br)
 	(if (null? br)
-		#f
+		0	;#f
 		(fila-check-recurse br 0)
 	)
 )
@@ -184,8 +204,8 @@
 
 (define (recurse-descen-win br puntos)
 	(if (null? puntos)
-		#f
-		(or (diag-check-descen-win br (caar puntos) (cadr puntos))
+		0	;#f
+		(hash-or (diag-check-descen-win br (caar puntos) (cadr puntos))
 			(recurse-descen-win br (cdr puntos)) 
 	)
 )
@@ -212,8 +232,8 @@
 
 (define (recurse-ascen-win br puntos)
 	(if (null? puntos)
-		#f
-		(or (diag-check-ascen-win br (caar puntos) (cadr puntos))
+		0	;#f
+		(hash-or (diag-check-ascen-win br (caar puntos) (cadr puntos))
 			(recurse-ascen-win br (cdr puntos)) 
 	)
 )
@@ -223,9 +243,18 @@
 )
 
 (define (board-check-diag-win br)
-	(or (board-check-descen-win br) 
+	(hash-or (board-check-descen-win br) 
 		(board-check-ascen-win br)
 	)
 )
+
+(define (board-who-is-winner br)
+	(hash-or (hash-or (board-check-horizontal-win br)
+			(board-check-vertical-win br)
+		)
+		(board-check-diag-win br)
+	)
+)
+
 ; ################## TDA Board
 ( provide (all-defined-out))
