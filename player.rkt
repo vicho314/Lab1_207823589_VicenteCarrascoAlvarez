@@ -53,16 +53,52 @@
 	(list-set pl 4 wins)
 )
 
+(define (player-wins-add pl num)
+	(player-wins-set pl (+ (player-wins pl) num))
+)
+
 (define (player-losses-set pl losses)
-	(list-set! pl 5 losses)
+	(list-set pl 5 losses)
+)
+
+(define (player-losses-add pl num)
+	(player-losses-set pl (+ (player-losses pl) num))
 )
 
 (define (player-draws-set pl draws)
-	(list-set! pl 6 draws)
+	(list-set pl 6 draws)
+)
+
+(define (player-draws-add pl num)
+	(player-draws-set pl (+ (player-draws pl) num))
 )
 
 (define (player-rem_p-set pl rem_pieces)
-	(list-set! pl 7 rem_pieces)
+	(list-set pl 7 rem_pieces)
+)
+
+(define (player-rem_p-add pl num)
+	(player-rem_p-set pl (+ (player-rem_p pl) num))
+)
+
+
+;###### Funciones
+(define (new-player id name color)
+	(player id name color 0 0 0 21)
+)
+
+(define (player-has-pieces? pl)
+	(> (player-rem_p pl) 0)
+)
+
+(define (player-update-stats pl result)
+	(cond [(eqv? result "win") 
+		(player-wins-add pl 1)]
+		[(eqv? result "loss") 
+		(player-losses-add pl 1)]
+		[(eqv? result "draw") 
+		(player-draws-add pl 1)]
+	)
 )
 
 (all-defined-out)

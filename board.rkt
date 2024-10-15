@@ -127,6 +127,10 @@
 	)
 )
 
+(define (board-lleno? br)
+	(andmap col-llena? br)
+)
+
 (define (board-can-play? br)
 	(null? (filter col-llena? br))
 )
