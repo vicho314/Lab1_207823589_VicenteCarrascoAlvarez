@@ -11,4 +11,20 @@
 	)
 )
 
+; implementar stack
+; ###### stack
+(define empty-stack null)
+
+(define (stack-push st v)
+	(cons v st)
+)
+
+(define (stack-top st)
+	(car st)
+)
+
+(define (stack-pop st)
+	(cdr st)
+)
+
 ( provide (all-defined-out))
