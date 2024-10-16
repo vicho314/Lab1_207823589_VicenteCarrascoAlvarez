@@ -1,4 +1,7 @@
 #lang racket
+(require "player.rkt")
+(require "board.rkt")
+(require "utils.rkt")
 ; TDA Game
 ; Dom: player1 (player) X player2 (player) X board (board) X
 ; current-turn (int)
@@ -24,6 +27,12 @@
 	(list-ref 2 gm)
 )
 
+(define (game-get-board gm)
+	(car (cons (game-board gm) 
+			(display-board (game-board gm))
+		)
+	)
+)
 
 (define (game-current-turn gm)
 	(list-ref 3 gm)
@@ -32,6 +41,13 @@
 
 (define (game-history gm)
 	(list-ref 4 gm)
+)
+
+(define (game-get-current-player gm)
+	(if (eqv? (game-current-turn gm) 0)
+		(game-p1 gm)
+		(game-p2 gm)
+	)
 )
 ; Modificadores
 (define (game-p1-set gm pl)
@@ -56,6 +72,53 @@
 (define (game-history-set gm st)
 	(list-set gm 4 st)
 )
+
+;Special (MALAS IDEAS)
+;Busca quién es red
+;salidas: p1, sino p2
+;Nota:FIXME: MALA IDEA
+(define (game-get-red gm)
+	(if (player-is-red? (game-p1 gm))
+		(game-p1 gm)
+		(game-p2 gm)
+	)
+)
+
+(define (game-get-yellow gm)
+	(if (player-is-yellow? (game-p1 gm))
+		(game-p1 gm)
+		(game-p2 gm)
+	)
+)
+
+
+(define (game-who-is-red gm)
+	(if (player-is-red? (game-p1 gm))
+		1
+		2
+	)
+)
+
+(define (game-who-is-yellow gm)
+	(if (player-is-yellow? (game-p1 gm))
+		1
+		2
+	)
+)
+
+(define (game-pl_red-set gm pl_red)
+	(if (eqv? (game-who-is-red gm) 1)
+		(game-p1-set gm pl_red)
+		(game-p2-set gm pl_red)
+	)
+)
+
+(define (game-pl_yellow-set gm pl_yellow)
+	(if (eqv? (game-who-is-yellow gm) 1)
+		(game-p1-set gm pl_yellow)
+		(game-p2-set gm pl_yellow)
+	)
+)
 ; Funciones
 (define (game-display-history gm)
 	(display (game-history))
@@ -74,6 +137,46 @@
 			(player-has-pieces? (game-p2 gm))
 		)
 	)
+)
+
+(define (game-red-win gm pl_red pl_yellow)
+	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "win")
+		(player-update-stats pl_yellow "loss")
+	)
+)
+
+(define (game-yellow-win gm pl_red pl_yellow)
+	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "loss")
+		(player-update-stats pl_red "win")
+	)
+)
+
+(define (game-draw-both gm pl_red pl_yellow)
+	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "draw")
+		(player-update-stats pl_yellow "draw")
+	)
+)
+
+(define (game-stats-wrapper_wins gm win_num pl_red pl_yellow)
+	(cond [(eqv? win_num 1)
+		(game-red-win gm pl_red pl_yellow)]
+		[(eqv? win_num 2)
+		(game-yellow-win gm pl_red pl_yellow]
+		[(eqv? win_num 0)
+		(game-draw-both gm pl_red pl_yellow)]
+	)
+)
+
+(define (game-stats-wrapper gm)
+	(game-stats_wrapper_wins gm 
+		(board-who-is-winner (game-board gm))
+		(game-get-red gm)
+		(game-get-yellow gm)
+	)
+)
+; cturn=-1
+(define (game-set-end gm)
+	(game-stats-wrapper (game-turn-set gm -1))
 )
 
 

@@ -101,4 +101,15 @@
 	)
 )
 
+;(define (player-update-wrapper pl )
+;)
+
+(define (player_is_red? pl)
+	(eqv? (player-color pl) "red")
+)
+
+(define (player_is_yellow? pl)
+	(eqv? (player-color pl) "yellow")
+)
+
 (all-defined-out)
