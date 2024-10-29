@@ -34,6 +34,13 @@
 		num1
 	)
 )
+
+(define (unhash-or num1 num2)
+	(if (eqv? (hash-or num1 num2) 0)
+		#f
+		#t
+	)
+)
 ; ################### TDA Piece
 
 ; TDA Board
@@ -258,6 +265,10 @@
 		)
 		(board-check-diag-win br)
 	)
+)
+
+(define (board-is-win? br)
+	(unhash-or (board-who-is-winner br))
 )
 
 ; ################## TDA Board

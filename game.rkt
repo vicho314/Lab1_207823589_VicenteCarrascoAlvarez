@@ -43,6 +43,7 @@
 	(list-ref 4 gm)
 )
 
+;FIXME: cturn = 0
 (define (game-get-current-player gm)
 	(if (eqv? (game-current-turn gm) 0)
 		(game-p1 gm)
@@ -174,10 +175,70 @@
 		(game-get-yellow gm)
 	)
 )
+
 ; cturn=-1
 (define (game-set-end gm)
 	(game-stats-wrapper (game-turn-set gm -1))
 )
 
+(define (game-set-move gm col)
+	(game-board-set 
+		(board-set-play-piece (game-board gm) col 
+				(piece 
+					(player-color 
+						(game-get-current-player gm)
+					)
+				)
+		)
+	)
+)
+
+(define (game-set-move-history gm col)
+	(game-set-move
+		(game-add-history gm col 
+			(player-color 
+				(game-get-current-player gm)
+			)
+		) 
+		col
+	)
+)
+
+(define (game-flip-turn gm)
+	(game-turn-set gm 
+		(remainder (+ (game-current-turn gm) 1) 2)
+	)
+)
+
+(define (game-player-take-piece gm)
+	(if (eqv? (game-current-turn gm) 0)
+		(game-p1-set (player-rem_p-add (game-get-current-player gm) -1)
+		)
+		(game-p2-set (player-rem_p-add (game-get-current-player gm) -1)
+		)
+	)
+)
+
+(define (game-is-win? gm)
+	(board-who-is-winner (game-board gm))
+)
+
+; ver si hay draw o win
+(define (game-win-check gm)
+	(or (game-is-draw? gm) 
+			(board-is-win? (game-get-board gm))
+	)
+)
+
+()
+(define (game-player-set-move gm pl col)
+	(if (eqv? (game-get-current-player gm) pl)
+		(game-flip-turn 
+			(game-player-take-piece (game-set-move-history gm col)
+			)
+		)
+		(display "Error:Jugador incorrecto!\n")
+	)
+)
 
 (all-defined-out)
