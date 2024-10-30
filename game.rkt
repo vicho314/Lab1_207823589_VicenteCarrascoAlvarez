@@ -224,17 +224,20 @@
 )
 
 ; ver si hay draw o win
-(define (game-win-check gm)
-	(or (game-is-draw? gm) 
+(define (game-ended gm)
+	(if	(or (game-is-draw? gm) 
 			(board-is-win? (game-get-board gm))
+		)
+		(game-set-end gm)
+		gm
 	)
 )
 
-()
+(define (game-do-action gm col))
 (define (game-player-set-move gm pl col)
 	(if (eqv? (game-get-current-player gm) pl)
-		(game-flip-turn 
-			(game-player-take-piece (game-set-move-history gm col)
+		(game-ended (game-flip-turn 
+			(game-player-take-piece (game-set-move-history gm col))
 			)
 		)
 		(display "Error:Jugador incorrecto!\n")
