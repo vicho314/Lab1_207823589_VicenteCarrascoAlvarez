@@ -233,7 +233,7 @@
 ; Ve si 4 valores sucesivos son iguales. 
 ; Función auxiliar para checkeos.
 ; Dom: col (list) x count (int) x pieza (piece)
-; Rec: (bool)
+; Rec: (int)
 (define (col-check-win col count pieza)
 	(if (or (and (null? col) (< count 4)) (eqv? pieza null))
 		0	;#f
@@ -249,7 +249,7 @@
 
 ; Verifica si hay 4 piezas iguales en vertical en todas las columnas.
 ; Dom: br (board)
-; Rec: (bool)
+; Rec: (int)
 ; Nota: Recursividad Natural
 (define (board-check-vertical-win br)
 	(if (null? br)
@@ -262,7 +262,7 @@
 
 ; Verifica si hay 4 piezas iguales en horizontal en la fila y.
 ; Dom: br (board) X y (int)
-; Rec: (bool)
+; Rec: (int)
 (define (fila-check-win br y)
 	(col-check-win (get-board-fila br y) 0 1)
 )
@@ -270,7 +270,7 @@
 ; Verifica si hay 4 piezas iguales en horizontal en todas las filas,
 ; partiendo de y.
 ; Dom: br (board) X y (int)
-; Rec: (bool)
+; Rec: (int)
 ; Nota: Wrapper para check-horizontal, inicializar en 0.
 (define (fila-check-recurse br y)
 	(if (>= y 6)
@@ -283,7 +283,7 @@
 
 ; Verifica si hay 4 piezas iguales en horizontal en todas las filas.
 ; Dom: br (board)
-; Rec: (bool)
+; Rec: (int)
 ; Nota: transformar fila a col, evaluar col.
 (define (board-check-horizontal-win br)
 	(if (null? br)
@@ -309,11 +309,19 @@
 	)
 )
 
-
+; Función auxiliar para chequeo de diagonales descendientes.
+; Revisa la diagonal desde (x,y) hacia adelante.
+; Dom: br (board) X x (int) X y (int)
+; Rec: (int)
 (define (diag-check-descen-win br x y)
 	(col-check-win (get-board-diag-descen br x y) 0 1)
 )
 
+
+; Función auxiliar para recursividad en chequeo de diagonales descendientes.
+; Revisa las diagonales a parir de la lista de puntos entregada.
+; Dom: br (board) X puntos (list)
+; Rec: (int)
 (define (recurse-descen-win br puntos)
 	(if (null? puntos)
 		0	;#f
@@ -322,12 +330,17 @@
 	)
 )
 
+
+; Función para chequeo de diagonales descendientes.
+; Revisa las diagonales descendientes en busca de un ganador.
+; Dom: br (board)
+; Rec: (int)
 (define (board-check-descen-win br)
 	(recurse-descen-win br criterio-descen)
 )
 
 
-; Entrega la lista de puntos a evaluar para las diagonales descendientes,
+; Entrega la lista de puntos a evaluar para las diagonales ascendientes,
 ; ya que solo se necesita una cierta cantidad de puntos para evaluar
 ; todas las diagonales de tamaño >= 4.
 ; Dom: void
@@ -344,10 +357,18 @@
 	)
 )
 
+; Función auxiliar para chequeo de diagonales ascendientes.
+; Revisa la diagonal desde (x,y) hacia adelante.
+; Dom: br (board) X x (int) X y (int)
+; Rec: (int)
 (define (diag-check-ascen-win br x y)
 	(col-check-win (get-board-diag-ascen br x y) 0 1)
 )
 
+; Función auxiliar para recursividad en chequeo de diagonales ascendientes.
+; Revisa las diagonales a parir de la lista de puntos entregada.
+; Dom: br (board) X puntos (list)
+; Rec: (int)
 (define (recurse-ascen-win br puntos)
 	(if (null? puntos)
 		0	;#f
@@ -356,16 +377,28 @@
 	)
 )
 
+; Función para chequeo de diagonales ascendientes.
+; Revisa las diagonales ascendientes en busca de un ganador.
+; Dom: br (board)
+; Rec: (int)
 (define (board-check-descen-win br)
 	(recurse-descen-win br criterio-ascen)
 )
 
+; Función para chequeo de diagonales.
+; Revisa las diagonales ascendientes y descendientes en busca de un ganador.
+; Dom: br (board)
+; Rec: (int)
 (define (board-check-diag-win br)
 	(hash-or (board-check-descen-win br) 
 		(board-check-ascen-win br)
 	)
 )
 
+; Función para chequeo del tablero en busca de un ganador.
+; Revisa las diagonales, filas y columnas.
+; Dom: br (board)
+; Rec: (int)
 (define (board-who-is-winner br)
 	(hash-or (hash-or (board-check-horizontal-win br)
 			(board-check-vertical-win br)
@@ -374,6 +407,11 @@
 	)
 )
 
+; Función para chequeo del tablero en busca de un ganador.
+; Revisa las diagonales, filas y columnas.
+; Dom: br (board)
+; Rec: (bool)
+; Nota: versión booleana
 (define (board-is-win? br)
 	(unhash-or (board-who-is-winner br))
 )
