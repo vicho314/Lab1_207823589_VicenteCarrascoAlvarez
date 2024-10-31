@@ -292,7 +292,12 @@
 	)
 )
 
-; Solo se necesitan las diag. de (0,5),(1,5),(2,5),(3,5) 
+; Entrega la lista de puntos a evaluar para las diagonales descendientes,
+; ya que solo se necesita una cierta cantidad de puntos para evaluar
+; todas las diagonales de tamaño >= 4.
+; Dom: void
+; Rec: lista de puntos (list)
+; Nota: Solo se necesitan las diag. de (0,5),(1,5),(2,5),(3,5) 
 ; y (0,4),(0,3)
 (define criterio-descen (list 
 	(cons 0 5)
@@ -303,6 +308,7 @@
 	(cons 0 3)
 	)
 )
+
 
 (define (diag-check-descen-win br x y)
 	(col-check-win (get-board-diag-descen br x y) 0 1)
@@ -320,7 +326,13 @@
 	(recurse-descen-win br criterio-descen)
 )
 
-; Solo se necesitan las diag. de (0,0),(1,0),(2,0),(3,0) 
+
+; Entrega la lista de puntos a evaluar para las diagonales descendientes,
+; ya que solo se necesita una cierta cantidad de puntos para evaluar
+; todas las diagonales de tamaño >= 4.
+; Dom: void
+; Rec: lista de puntos (list)
+; Nota: Solo se necesitan las diag. de (0,0),(1,0),(2,0),(3,0) 
 ; y (0,1),(0,2)
 (define criterio-ascen (list
 	(cons 0 0)
