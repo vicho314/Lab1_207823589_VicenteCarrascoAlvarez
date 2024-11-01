@@ -1,6 +1,6 @@
 #lang racket
-; (require "player.rkt")
-(require "utils.rkt")
+; (require "player_207823589_CarrascoAlvarez.rkt")
+(require "utils_207823589_CarrascoAlvarez.rkt")
 ; TDA Board + TDA Piece
 
 ; ###### TDA Piece
@@ -136,8 +136,8 @@
 (define (get-board-diag-ascen br x y)
 	(if (fuera-del-tablero x y)
 		null
-		(cons (get-board-xy x y) 
-			(get-board-diag-ascen (+ x 1) (+ y 1))
+		(cons (get-board-xy br x y) 
+			(get-board-diag-ascen br (+ x 1) (+ y 1))
 		)
 	)
 )
@@ -149,8 +149,8 @@
 (define (get-board-diag-descen br x y)
 	(if (fuera-del-tablero x y)
 		null
-		(cons (get-board-xy x y) 
-			(get-board-diag-ascen (+ x 1) (- y 1))
+		(cons (get-board-xy br x y) 
+			(get-board-diag-descen br (+ x 1) (- y 1))
 		)
 	)
 )
@@ -195,7 +195,11 @@
 ; Rec: display en salida estándar (void) 
 (define (display-board br)
 	;(display (reverse br))
-	(display br)
+	(car 
+		(cons (display "\n") 
+			(map writeln br)
+		)
+	)
 )
 
 ; Retorna #t si una columna está llena (n=6), #f en caso contrario.
@@ -209,12 +213,12 @@
 )
 
 
-; Retorna #t si un tablero está lleno, #f en caso contrario.
+; Retorna #f si un tablero está lleno, #t en caso contrario.
 ; No se consideran los null.
 ; Dom: br (board)
 ; Rec: (bool)
 (define (board-can-play? br)
-	(andmap col-llena? br)
+	(not (andmap col-llena? br))
 )
 
 ; Mete una pieza en la columna x del tablero. Es decir, la pieza nueva se
@@ -325,8 +329,9 @@
 (define (recurse-descen-win br puntos)
 	(if (null? puntos)
 		0	;#f
-		(hash-or (diag-check-descen-win br (caar puntos) (cadr puntos))
-			(recurse-descen-win br (cdr puntos)) 
+		(hash-or (diag-check-descen-win br (caar puntos) (cdar puntos))
+			(recurse-descen-win br (cdr puntos))
+		)
 	)
 )
 
@@ -372,8 +377,9 @@
 (define (recurse-ascen-win br puntos)
 	(if (null? puntos)
 		0	;#f
-		(hash-or (diag-check-ascen-win br (caar puntos) (cadr puntos))
-			(recurse-ascen-win br (cdr puntos)) 
+		(hash-or (diag-check-ascen-win br (caar puntos) (cdar puntos))
+			(recurse-ascen-win br (cdr puntos))
+		)
 	)
 )
 
@@ -381,15 +387,15 @@
 ; Revisa las diagonales ascendientes en busca de un ganador.
 ; Dom: br (board)
 ; Rec: (int)
-(define (board-check-descen-win br)
-	(recurse-descen-win br criterio-ascen)
+(define (board-check-ascen-win br)
+	(recurse-ascen-win br criterio-ascen)
 )
 
 ; Función para chequeo de diagonales.
 ; Revisa las diagonales ascendientes y descendientes en busca de un ganador.
 ; Dom: br (board)
 ; Rec: (int)
-(define (board-check-diag-win br)
+(define (board-check-diagonal-win br)
 	(hash-or (board-check-descen-win br) 
 		(board-check-ascen-win br)
 	)
@@ -403,7 +409,7 @@
 	(hash-or (hash-or (board-check-horizontal-win br)
 			(board-check-vertical-win br)
 		)
-		(board-check-diag-win br)
+		(board-check-diagonal-win br)
 	)
 )
 
@@ -413,7 +419,7 @@
 ; Rec: (bool)
 ; Nota: versión booleana
 (define (board-is-win? br)
-	(unhash-or (board-who-is-winner br))
+	(unhash-or (board-who-is-winner br) 0)
 )
 
 ; ################## TDA Board

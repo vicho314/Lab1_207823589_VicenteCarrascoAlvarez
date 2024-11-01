@@ -42,5 +42,22 @@
 (define (stack-pop st)
 	(cdr st)
 )
+;###### TDA stack
+
+(define (get-fila lst y)
+	(foldr (lambda (l1 l2)(cons (list-ref l1 y) l2)) '() lst)
+)
+
+(define (transpose lst . y)
+	(if	(null? y)
+		(transpose lst 0)
+		(if	(< (car y) (length lst))
+			(cons (get-fila lst (car y)) 
+				(transpose lst (+ (car y) 1))
+			)
+			null	
+		)
+	)
+)
 
 ( provide (all-defined-out))

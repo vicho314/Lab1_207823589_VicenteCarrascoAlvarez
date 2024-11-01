@@ -15,49 +15,49 @@
 ; Dom: pl (player)
 ; Rec: id (int)
 (define (player-id pl)
-	(list-ref pl 1)
+	(list-ref pl 0)
 )
 
 ; Retorna el campo "name" de tda player.
 ; Dom: pl (player)
 ; Rec: name (string)
 (define (player-name pl)
-	(list-ref pl 2)
+	(list-ref pl 1)
 )
 
 ; Retorna el campo "color" de tda player.
 ; Dom: pl (player)
 ; Rec: color (string)
 (define (player-color pl)
-	(list-ref pl 3)
+	(list-ref pl 2)
 )
 
 ; Retorna el campo "wins" de tda player.
 ; Dom: pl (player)
 ; Rec: wins (int)
 (define (player-wins pl)
-	(list-ref pl 4)
+	(list-ref pl 3)
 )
 
 ; Retorna el campo "losses" de tda player.
 ; Dom: pl (player)
 ; Rec: losses (int)
 (define (player-losses pl)
-	(list-ref pl 5)
+	(list-ref pl 4)
 )
 
 ; Retorna el campo "draws" de tda player.
 ; Dom: pl (player)
 ; Rec: draws (int)
 (define (player-draws pl)
-	(list-ref pl 6)
+	(list-ref pl 5)
 )
 
 ; Retorna el campo "remaining_pieces" de tda player.
 ; Dom: pl (player)
 ; Rec: remaining_pieces (int)
 (define (player-rem_p pl)
-	(list-ref pl 7)
+	(list-ref pl 6)
 )
 
 ; Modificadores
@@ -66,28 +66,28 @@
 ; Dom: pl (player) x id (int)
 ; Rec: (player)
 (define (player-id-set pl id)
-	(list-set! pl 1 id)
+	(list-set pl 0 id)
 )
 
 ; Modifica el campo "name" de tda player con un valor nuevo.
 ; Dom: pl (player) x name (string)
 ; Rec: (player)
 (define (player-name-set pl name)
-	(list-set! pl 2 name)
+	(list-set pl 1 name)
 )
 
 ; Modifica el campo "color" de tda player con un valor nuevo.
 ; Dom: pl (player) x color (string)
 ; Rec: (player)
 (define (player-color-set pl color)
-	(list-set! pl 3 color)
+	(list-set pl 2 color)
 )
 
 ; Modifica el campo "wins" de tda player con un valor nuevo.
 ; Dom: pl (player) x wins (int)
 ; Rec: (player)
 (define (player-wins-set pl wins)
-	(list-set pl 4 wins)
+	(list-set pl 3 wins)
 )
 
 ; Modifica el campo "wins" de tda player, agregando "num".
@@ -101,7 +101,7 @@
 ; Dom: pl (player) x losses (int)
 ; Rec: (player)
 (define (player-losses-set pl losses)
-	(list-set pl 5 losses)
+	(list-set pl 4 losses)
 )
 
 
@@ -117,7 +117,7 @@
 ; Dom: pl (player) x draws (int)
 ; Rec: (player)
 (define (player-draws-set pl draws)
-	(list-set pl 6 draws)
+	(list-set pl 5 draws)
 )
 
 ; Modifica el campo "draws" de tda player, agregando "num".
@@ -132,7 +132,7 @@
 ; Dom: pl (player) x rem_pieces (int)
 ; Rec: (player)
 (define (player-rem_p-set pl rem_pieces)
-	(list-set pl 7 rem_pieces)
+	(list-set pl 6 rem_pieces)
 )
 
 
@@ -180,15 +180,15 @@
 ; Retorna #t en caso de que el color del player sea "red".
 ; Dom: pl (player)
 ; Rec: (bool)
-(define (player_is_red? pl)
+(define (player-is-red? pl)
 	(eqv? (player-color pl) "red")
 )
 
 ; Retorna #t en caso de que el color del player sea "yellow".
 ; Dom: pl (player)
 ; Rec: (bool)
-(define (player_is_yellow? pl)
+(define (player-is-yellow? pl)
 	(eqv? (player-color pl) "yellow")
 )
 
-(all-defined-out)
+(provide (all-defined-out))

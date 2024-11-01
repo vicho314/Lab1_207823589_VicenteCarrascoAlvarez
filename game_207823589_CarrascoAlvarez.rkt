@@ -1,8 +1,8 @@
 #lang racket
-(require "player.rkt")
-(require "board.rkt")
-(require "utils.rkt")
-
+(require "player_207823589_CarrascoAlvarez.rkt")
+(require "board_207823589_CarrascoAlvarez.rkt")
+(require "utils_207823589_CarrascoAlvarez.rkt")
+(require racket/trace)
 ; ###### TDA Game
 
 ; Constructor de tda game
@@ -20,26 +20,26 @@
 ; Dom: gm (game)
 ; Rec: (player)
 (define (game-p1 gm)
-	(list-ref 0 gm)
+	(list-ref gm 0)
 )
 
 ; Retorna el campo "player2" del tda game.
 ; Dom: gm (game)
 ; Rec: (player)
 (define (game-p2 gm)
-	(list-ref 1 gm)
+	(list-ref gm 1)
 )
 
 ; Retorna el campo "board" del tda game.
 ; Dom: gm (game)
-; Rec: (player)
+; Rec: (board)
 (define (game-board gm)
-	(list-ref 2 gm)
+	(list-ref gm 2)
 )
 
 ; Retorna el campo "board" del tda game, y lo muestra en pantalla.
 ; Dom: gm (game)
-; Rec: (player)
+; Rec: (game)
 (define (game-get-board gm)
 	(car (cons (game-board gm) 
 			(display-board (game-board gm))
@@ -49,16 +49,16 @@
 
 ; Retorna el campo "current_turn" del tda game.
 ; Dom: gm (game)
-; Rec: (player)
+; Rec: (int)
 (define (game-current-turn gm)
-	(list-ref 3 gm)
+	(list-ref gm 3)
 )
 
 ; Retorna el campo "history" del tda game.
 ; Dom: gm (game)
-; Rec: (player)
+; Rec: (stack)
 (define (game-history gm)
-	(list-ref 4 gm)
+	(list-ref gm 4)
 )
 
 ; FIXME: cturn = 0
@@ -66,9 +66,9 @@
 ; Dom: gm (game)
 ; Rec: (player) || null
 (define (game-get-current-player gm)
-	(if (eqv? (game-current-turn gm) 0)
+	(if (eqv? (game-current-turn gm) 1)
 		(game-p1 gm)
-		(if (eqv? (game-current-turn gm) 1)
+		(if (eqv? (game-current-turn gm) 2)
 			(game-p2 gm)
 			null
 		)
@@ -200,7 +200,7 @@
 ; Dom: gm (game)
 ; Rec: (bool)
 (define (game-is-draw? gm)
-	(and (board-lleno? (game-board gm))
+	(and (not (board-can-play? (game-board gm)))
 		(or (player-has-pieces? (game-p1 gm))
 			(player-has-pieces? (game-p2 gm))
 		)
@@ -212,8 +212,9 @@
 ; Dom: gm (game) x pl_red (player) x pl_yellow (player)
 ; Rec: (game)
 (define (game-red-win gm pl_red pl_yellow)
-	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "win")
-		(player-update-stats pl_yellow "loss")
+	(game-pl_yellow-set 
+		(game-pl_red-set gm (player-update-stats pl_red "win"))
+			(player-update-stats pl_yellow "loss")
 	)
 )
 
@@ -222,8 +223,9 @@
 ; Dom: gm (game) x pl_red (player) x pl_yellow (player)
 ; Rec: (game)
 (define (game-yellow-win gm pl_red pl_yellow)
-	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "loss")
-		(player-update-stats pl_red "win")
+	(game-pl_yellow-set 
+		(game-pl_red-set gm (player-update-stats pl_red "loss"))
+			(player-update-stats pl_yellow "win")
 	)
 )
 
@@ -232,8 +234,9 @@
 ; Dom: gm (game) x pl_red (player) x pl_yellow (player)
 ; Rec: (game)
 (define (game-draw-both gm pl_red pl_yellow)
-	(game-pl_yellow-set (game-pl_red-set gm (player-update-stats pl_red "draw")
-		(player-update-stats pl_yellow "draw")
+	(game-pl_yellow-set 
+		(game-pl_red-set gm (player-update-stats pl_red "draw"))
+			(player-update-stats pl_yellow "draw")
 	)
 )
 
@@ -241,13 +244,12 @@
 ; Dom: gm (game) x win_num (int) x pl_red (player) x pl_yellow (player)
 ; Rec: (game)
 ; Nota: FIXME: Condición 0 equivale a draw???
-(define (game-stats-wrapper_wins gm win_num pl_red pl_yellow)
+(define (game-stats-wrapper-wins gm win_num pl_red pl_yellow)
 	(cond [(eqv? win_num 1)
 		(game-red-win gm pl_red pl_yellow)]
 		[(eqv? win_num 2)
-		(game-yellow-win gm pl_red pl_yellow]
-		[(and (eqv? win_num 0) (not (game-is-draw? gm)))
-		gm]
+		(game-yellow-win gm pl_red pl_yellow)]
+		[(and (eqv? win_num 0) (not (game-is-draw? gm))) gm]
 		[(and (eqv? win_num 0) (game-is-draw? gm))
 		(game-draw-both gm pl_red pl_yellow)]
 	)
@@ -257,7 +259,7 @@
 ; Dom: gm (game)
 ; Rec: (game)
 (define (game-stats-wrapper gm)
-	(game-stats_wrapper_wins gm 
+	(game-stats-wrapper-wins gm 
 		(board-who-is-winner (game-board gm))
 		(game-get-red gm)
 		(game-get-yellow gm)
@@ -274,10 +276,10 @@
 
 ; Mala idea?.
 ; Función que ejecuta un movimiento en el tablero en base al turno actual.
-: Dom: gm (game) x col (int)
+; Dom: gm (game) x col (int)
 ; Rec: (game)
 (define (game-set-move gm col)
-	(game-board-set 
+	(game-board-set gm 
 		(board-set-play-piece (game-board gm) col 
 				(piece 
 					(player-color 
@@ -290,7 +292,7 @@
 
 ; Función que ejecuta un movimiento en el tablero en base al turno actual,
 ; y añade el movimiento al historial.
-: Dom: gm (game) x col (int)
+; Dom: gm (game) x col (int)
 ; Rec: (game)
 (define (game-set-move-history gm col)
 	(game-set-move
@@ -304,23 +306,23 @@
 )
 
 ; Función que alterna el turno actual (0 o 1).
-: Dom: gm (game)
+; Dom: gm (game)
 ; Rec: (game)
 (define (game-flip-turn gm)
 	(game-turn-set gm 
-		(remainder (+ (game-current-turn gm) 1) 2)
+		(+ 1 (remainder (+ (game-current-turn gm) 0) 2))
 	)
 )
 
 ; Función que quita una pieza al jugador del turno actual. Útil para 
 ; ejecutar movimientos.
-: Dom: gm (game)
+; Dom: gm (game)
 ; Rec: (game)
 (define (game-player-take-piece gm)
-	(if (eqv? (game-current-turn gm) 0)
-		(game-p1-set (player-rem_p-add (game-get-current-player gm) -1)
+	(if (eqv? (game-current-turn gm) 1)
+		(game-p1-set gm (player-rem_p-add (game-get-current-player gm) -1)
 		)
-		(game-p2-set (player-rem_p-add (game-get-current-player gm) -1)
+		(game-p2-set gm (player-rem_p-add (game-get-current-player gm) -1)
 		)
 	)
 )
@@ -338,7 +340,7 @@
 ; Rec: (game)
 (define (game-ended gm)
 	(if	(or (game-is-draw? gm) 
-			(board-is-win? (game-get-board gm))
+			(board-is-win? (game-board gm))
 		)
 		(game-set-end gm)
 		gm
@@ -353,13 +355,13 @@
 ; Dom: gm (board) x pl (player) x col (int)
 ; Rec: (game) 
 (define (game-player-set-move gm pl col)
-	(if (eqv? (game-get-current-player gm) pl)
+	(if (eqv? (player-name (game-get-current-player gm)) (player-name pl))
 		(game-ended (game-flip-turn 
 			(game-player-take-piece (game-set-move-history gm col))
 			)
 		)
-		(car '(gm . (display "Error:Jugador incorrecto!\n")))
+		(car (cons gm (display "Error:Jugador incorrecto!\n")))
 	)
 )
 
-(all-defined-out)
+(provide (all-defined-out))

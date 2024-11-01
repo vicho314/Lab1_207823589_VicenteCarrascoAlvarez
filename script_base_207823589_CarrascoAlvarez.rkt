@@ -1,4 +1,11 @@
+#lang racket
 ; Script de prueba para Conecta4
+(require "player_207823589_CarrascoAlvarez.rkt")                                
+(require "board_207823589_CarrascoAlvarez.rkt")                                 
+(require "utils_207823589_CarrascoAlvarez.rkt")
+(require "game_207823589_CarrascoAlvarez.rkt")
+
+(require racket/trace)
 ; 1. Creación de jugadores (10 fichas cada uno para un juego corto)
 (define p1 (player 1 "Juan" "red" 0 0 0 10))
 (define p2 (player 2 "Mauricio" "yellow" 0 0 0 10))
@@ -25,7 +32,7 @@
 (define g9 (game-player-set-move g8 p1 3)); Juan coloca en columna 3
 (define g10 (game-player-set-move g9 p2 0)) ; Mauricio coloca en columna 0
 (define g11 (game-player-set-move g10 p1 3)) ; Juan coloca en columna 3
-(victoria diagonal)
+;(victoria diagonal)
 
 ; 6. Verificaciones durante el juego
 (display "¿Se puede jugar en el tablero vacío? ")
@@ -43,7 +50,7 @@
 (display "Verificación de victoria diagonal: ")
 (board-check-diagonal-win (game-get-board g11))
 (display "Verificación de ganador: ")
-(board-check-winner (game-get-board g11))
+(board-who-is-winner (game-get-board g11))
 
 ; 8. Verificación de empate
 (display "¿Es empate? ")
@@ -53,13 +60,13 @@
 (define ended-game (game-set-end g11))
 
 ; 10. Actualizar estadísticas de los jugadores
-(define updated-p1 (player-update-stats p1 "win"))
-(define updated-p2 (player-update-stats p2 "loss"))
+;(define updated-p1 (player-update-stats p1 "win"))
+;(define updated-p2 (player-update-stats p2 "loss"))
 
 ; 11. Mostrar historial de movimientos
 (display "Historial de movimientos: ")
 (game-history ended-game)
 
 ; 12. Mostrar estado final del tablero
-(display "Estado final del tablero: ")
+(display "Estado final del tablero: \n")
 (game-get-board ended-game)
