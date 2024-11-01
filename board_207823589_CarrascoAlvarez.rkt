@@ -133,6 +133,7 @@
 ; Retorna la diagonal ascendente, desde la posición (x,y) en adelante.
 ; Dom: br (board) X x (int) X y (int)
 ; Rec: 'lista de (pieces)' == (list)
+; Tipo de Recursión: natural
 (define (get-board-diag-ascen br x y)
 	(if (fuera-del-tablero x y)
 		null
@@ -146,6 +147,7 @@
 ; Retorna la diagonal descendente, desde la posición (x,y) en adelante.
 ; Dom: br (board) X x (int) X y (int)
 ; Rec: 'lista de (pieces)' == (list)
+; Tipo de Recursión: natural
 (define (get-board-diag-descen br x y)
 	(if (fuera-del-tablero x y)
 		null
@@ -197,7 +199,7 @@
 	;(display (reverse br))
 	(car 
 		(cons (display "\n") 
-			(map writeln br)
+			(map displayln br)
 		)
 	)
 )
@@ -238,6 +240,7 @@
 ; Función auxiliar para checkeos.
 ; Dom: col (list) x count (int) x pieza (piece)
 ; Rec: (int)
+; Tipo de Recursión: de cola
 (define (col-check-win col count pieza)
 	(if (or (and (null? col) (< count 4)) (eqv? pieza null))
 		0	;#f
@@ -254,7 +257,7 @@
 ; Verifica si hay 4 piezas iguales en vertical en todas las columnas.
 ; Dom: br (board)
 ; Rec: (int)
-; Nota: Recursividad Natural
+; Tipo de Recursión: Recursividad Natural
 (define (board-check-vertical-win br)
 	(if (null? br)
 		0	;#f
@@ -275,6 +278,7 @@
 ; partiendo de y.
 ; Dom: br (board) X y (int)
 ; Rec: (int)
+; Tipo de Recursión: natural
 ; Nota: Wrapper para check-horizontal, inicializar en 0.
 (define (fila-check-recurse br y)
 	(if (>= y 6)
@@ -288,6 +292,7 @@
 ; Verifica si hay 4 piezas iguales en horizontal en todas las filas.
 ; Dom: br (board)
 ; Rec: (int)
+; Tipo de Recursión: natural
 ; Nota: transformar fila a col, evaluar col.
 (define (board-check-horizontal-win br)
 	(if (null? br)
@@ -326,6 +331,7 @@
 ; Revisa las diagonales a parir de la lista de puntos entregada.
 ; Dom: br (board) X puntos (list)
 ; Rec: (int)
+; Tipo de Recursión: natural
 (define (recurse-descen-win br puntos)
 	(if (null? puntos)
 		0	;#f
@@ -374,6 +380,7 @@
 ; Revisa las diagonales a parir de la lista de puntos entregada.
 ; Dom: br (board) X puntos (list)
 ; Rec: (int)
+; Tipo de Recursión: natural
 (define (recurse-ascen-win br puntos)
 	(if (null? puntos)
 		0	;#f
