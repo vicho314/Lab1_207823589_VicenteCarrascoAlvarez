@@ -28,7 +28,7 @@
 3. RNF3 - Versión: 1
 4. RNF4 - Standard: 1
 5. RNF5 - No variables: 1
-6. RNF6 - Documentación: 0,75
+6. RNF6 - Documentación: 1
 7. RNF7 - Dom->Rec: 1
 8. RNF8 - Organización: 1
 9. RNF9 - Historial: 1

@@ -1,3 +1,4 @@
+#lang racket
 (require "player_207823589_CarrascoAlvarez.rkt")
 (require "board_207823589_CarrascoAlvarez.rkt")
 (require "utils_207823589_CarrascoAlvarez.rkt")
@@ -74,16 +75,16 @@
 ; (RF10)
 (display-board empty-board)
 (display "\nGanador de tablero vacío?: ")
-(display (board-who-is-winner? empty-board))
+(display (board-who-is-winner empty-board))
 
 (display-board b4b)
 (display "\nGanador de tablero b4b?: ")
-(board-who-is-winner? b4b)
+(board-who-is-winner b4b)
 
 (display-board b6b)
 (display "\nGanador de tablero b6b?: ")
-(display (board-who-is-winner? b6b))
+(display (board-who-is-winner b6b))
 
 (display-board b16)
 (display "\nGanador de tablero b16?: ")
-(display (board-who-is-winner? b16))
+(display (board-who-is-winner b16))

@@ -196,11 +196,9 @@
 ; Dom: br (board)
 ; Rec: display en salida estándar (void) 
 (define (display-board br)
-	;(display (reverse br))
-	(car 
-		(cons (display "\n") 
-			(map displayln br)
-		)
+	(if (null? br)
+		(display "\n")
+		(map displayln br)
 	)
 )
 
