@@ -1,0 +1,36 @@
+# RF:
+
+1. RF1 - TDAs: 1
+2. RF2 - TDA Player constructor: 1
+3. RF3 - TDA Piece constructor: 1
+4. RF4 - TDA Board constructor: 1
+5. RF5 - TDA Board board-can-play?: 1
+6. RF6 - TDA Board board-set-play-piece: 1
+7. RF7 - TDA Board board-check-vertical-win: 1
+8. RF8 - TDA Board board-check-horizontal-win: 1
+9. RF9 - TDA Board board-check-diagonal-win: 1
+10. RF10 - TDA Board board-who-is-winner: 0,75
+11. RF11 - TDA Game constructor: 1
+12. RF12 - TDA Game game-history: 1
+13. RF13 - TDA Game game-is-draw?: 1
+14. RF14 - TDA Player player-update-stats: 1
+15. RF15 - TDA Game game-get-current-player: 0,75
+16. RF16 - TDA Game game-get-board: 1
+17. RF17 - TDA Game game-set-end: 1
+18. RF18 - TDA Game game-player-set-move: 0,75
+19. RF19 - TDA Game game-ai-set-move: 0
+20. RF20 - TDA Game game-ai-explain-history: 0
+
+# RNF:
+
+1. RNF1 - Autoevaluación: 1
+2. RNF2 - Lenguaje: 1
+3. RNF3 - Versión: 1
+4. RNF4 - Standard: 1
+5. RNF5 - No variables: 1
+6. RNF6 - Documentación: 0,75
+7. RNF7 - Dom->Rec: 1
+8. RNF8 - Organización: 1
+9. RNF9 - Historial: 1
+10. RNF10 - Script de pruebas: 1
+11. RNF11 - Prerrequisitos: 0,75
