@@ -1,9 +1,9 @@
 #lang racket
 ; Script de prueba para Conecta4
-(require "player_207823589_CarrascoAlvarez.rkt")                                
-(require "board_207823589_CarrascoAlvarez.rkt")                                 
-(require "utils_207823589_CarrascoAlvarez.rkt")
-(require "game_207823589_CarrascoAlvarez.rkt")
+(require "player_20782358_CarrascoAlvarez.rkt")                                
+(require "board_20782358_CarrascoAlvarez.rkt")                                 
+(require "utils_20782358_CarrascoAlvarez.rkt")
+(require "game_20782358_CarrascoAlvarez.rkt")
 
 (require racket/trace)
 ; 1. Creación de jugadores (10 fichas cada uno para un juego corto)
